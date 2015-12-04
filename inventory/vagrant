@@ -1,0 +1,5 @@
+[local]
+127.0.0.1 ansible_connection=local
+
+[xen_masters]
+xen1.test.lan ansible_ssh_port=2222 ansible_ssh_host=127.0.0.1

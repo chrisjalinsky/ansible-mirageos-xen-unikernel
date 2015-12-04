@@ -1,0 +1,22 @@
+---
+
+- hosts: all
+  sudo: yes
+
+  tasks:
+    - name: Set global interface ip addr
+      set_fact:
+        host_ip: "{{ vagrant_ip }}"
+
+- name: Configure Xen master
+  hosts: xen_masters
+  become: yes
+  roles:
+    - role: vbox-guest-utils
+    - role: xen
+    - role: network_interfaces
+      network_interfaces_address: "{{ vagrant_ip }}"
+      network_interfaces_broadcast: "172.16.8.255"
+      network_interfaces_netmask: "255.255.255.0"
+    - role: dnsmasq
+    - role: mirageos

@@ -1,0 +1,23 @@
+---
+
+- name: Template
+  template: src=interfaces.j2 dest=/etc/network/interfaces owner=root group=root backup=yes
+  register: ifaces_template
+
+- name: reboot the system
+  command: /sbin/reboot
+  ignore_errors: true
+  when: ifaces_template.changed
+
+- name: waiting for server to come back
+  local_action: wait_for host={{ ansible_ssh_host }} port={{ ansible_ssh_port }} state=started search_regex=OpenSSH
+  sudo: false
+
+- name: Wait for SSH to come up
+  wait_for:
+    host: "{{ host_ip }}"
+    port: 22
+    delay: 60
+    timeout: 120
+    state: started
+  when: ifaces_template.changed

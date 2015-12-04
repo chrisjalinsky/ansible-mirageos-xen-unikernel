@@ -1,0 +1,66 @@
+---
+
+- name: Install mirage os dependencies
+  apt:
+    name: "{{ item }}"
+    state: present
+    cache_valid_time: 3600
+    update_cache: yes
+  with_items:
+    - ocaml-compiler-libs
+    - ocaml-interp
+    - ocaml-base-nox
+    - ocaml-base
+    - ocaml
+    - ocaml-nox
+    - ocaml-native-compilers
+    - camlp4
+    - camlp4-extra
+    - m4
+    - zeroinstall-injector
+
+- name: Install opam
+  command: "0install add opam http://tools.ocaml.org/opam.xml"
+  become: no
+  ignore_errors: true
+  register: opam_install
+  failed_when: opam_install.rc != 0
+
+- name: Install additional dependencies
+  apt:
+    name: "{{ item }}"
+    state: present
+    cache_valid_time: 3600
+    update_cache: yes
+  with_items:
+    - libssl-dev
+    - pkg-config
+
+- name: Opam init
+  shell: "~/bin/opam init -a"
+  become: no
+
+- name: Opam config env
+  shell: "eval `~/bin/opam config env`"
+  become: no
+
+- name: Init for subsequent usage
+  lineinfile:
+    line: ". /home/vagrant/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true"
+    regexp: "^\\.\\s*/home/vagrant/\\.opam/opam-init/init\\.sh.*"
+    dest: "~/.profile"
+    insertafter: EOF
+  become: no
+
+- name: Template ocamlinit
+  template:
+    src: "ocamlinit.j2"
+    dest: "~/.ocamlinit"
+  become: no
+
+- name: Install mirage with opam...may need to sign out
+  shell: "~/bin/opam install mirage -v -y"
+  become: no
+  ignore_errors: true
+  register: mirageos_install
+  failed_when: mirageos_install.rc != 0

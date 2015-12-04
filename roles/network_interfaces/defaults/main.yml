@@ -1,0 +1,5 @@
+---
+
+network_interfaces_address: "192.168.3.3"
+network_interfaces_broadcast: "192.168.3.255"
+network_interfaces_netmask: "255.255.255.0"
