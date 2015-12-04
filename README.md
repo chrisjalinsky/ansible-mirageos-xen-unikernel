@@ -7,16 +7,27 @@ I replicated the steps provided by Magnus Skjegstad at [his website](http://www.
 * Ansible 1.9.3
 * Virtualbox 4.3.30 r101610
 * Vagrant 1.7.2
+* Ran on Mac OSX 10.11.1
+
+For more information:
+* [MirageOS](https://mirage.io/wiki/install)
+* [Official MirageOS Webpage](http://www.xenproject.org/developers/teams/mirage-os.html)
+* [Xen Project](http://www.xenproject.org/)
 
 Prerequisites:
 --------------
 
-As always, provide host entries for DNS resolution. I found vagrant-hostmanager to handle the /etc/hosts nicely. You can install it with:
+As always, provide host entries for DNS resolution. I found vagrant-hostmanager to handle the /etc/hosts nicely. If you want to handle the /etc/hosts file yourself, skip this plugin. You can install it with:
 
 ```
 vagrant plugin install vagrant-hostmanager
 ```
 
+The plugin writes this entry to /etc/hosts, the Virtualbox VM's default network adapter 2, which is created by Vagrant:
+
+```
+172.16.8.144 xen1.test.lan
+```
 
 To build the Xen and MirageOS VM:
 =================================
@@ -90,5 +101,5 @@ sudo xl create www.xl -c
 Future Development
 ==================
 
-Feedback is welcome and encourage. This is a personal study and feel free to do whatever you want with the code.
+Feedback is welcome. This is a personal study and feel free to do whatever you want with the code.
 
