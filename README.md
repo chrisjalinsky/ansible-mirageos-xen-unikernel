@@ -34,13 +34,19 @@ There are a lot of reboots that happen to put the VM into the correct state. For
 vagrant provision
 ```
 
-The provision should continue right along with the installation/setup.
+The provision should continue right along with the installation/setup. The Xen and MirageOS related libraries get placed in the ansible_ssh_users home directory. In the case of this vagrant provision, libraries and /bin programs end up in /home/vagrant. Switch to the vagrant user to use Xen and MirageOS. If you log in with:
+
+```
+vagrant ssh
+```
+
+you will be ready to go.
 
 
 Test out the Installation
 =========================
 
-The playbook creates a bridged network interface ("br0")
+The playbook creates a bridged network interface ("br0").
 
 ```
 mirage --version
